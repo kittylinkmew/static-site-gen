@@ -1,10 +1,16 @@
+import os
+import shutil
 import sys
-from textnode import TextNode
-from textnode import TextType
+
+from copystatic import copy_files_recursive
+from textnode import TextNode, TextType
+
 
 def main():
-    my_test = TextNode("This is a test.",TextType.TEXT,"https://mytest.com")
-    print(my_test)
+    if os.path.exists("./public"):
+        shutil.rmtree("./public")
+        copy_files_recursive("./static", "./public")
+
 
 if __name__ == "__main__":
     sys.exit(main())
