@@ -1,0 +1,39 @@
+import os
+
+from htmlnode import *
+from markdown import markdown_to_html_node
+
+
+def extract_title(markdown):
+    for line in markdown.splitlines():
+        if line.startswith("# "):
+            return line[2:].strip()
+    raise Exception("No title was found.")
+
+
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+
+    markdown_file = open(from_path)
+    markdown_file_content = markdown_file.read()
+    markdown_file.close()
+    template_file = open(template_path)
+    template_path_content = template_file.read()
+    template_file.close()
+
+    node = markdown_to_html_node(markdown_file_content)
+    html_string = node.to_html()
+
+    title = extract_title(markdown_file_content)
+
+    result = template_path_content.replace("{{ Title }}", title).replace(
+        "{{ Content }}", html_string
+    )
+
+    directory = os.path.dirname(dest_path)
+    os.makedirs(directory, exist_ok=True)
+
+    dest_file = open(dest_path, "w")
+
+    dest_file.write(result)
+    dest_file.close()

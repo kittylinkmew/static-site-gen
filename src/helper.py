@@ -1,7 +1,9 @@
-from textnode import TextType, TextNode
 import re
 
-#delimiter function that seperates nodes by type using characters
+from textnode import TextNode, TextType
+
+
+# delimiter function that seperates nodes by type using characters
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
     new_nodes = []
@@ -17,7 +19,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
         for index, text in enumerate(nodes):
             if text.strip():
-                if index % 2== 0:
+                if index % 2 == 0:
                     node = TextNode(text, TextType.TEXT)
                     new_nodes.append(node)
                 else:
@@ -25,16 +27,18 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                     new_nodes.append(node)
     return new_nodes
 
-#function that takes raw markdown text and returns a list of tuples for images
+
+# function that takes raw markdown text and returns a list of tuples for images
 def extract_markdown_images(text):
-    matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)",text)
+    matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return matches
 
 
-#function that takes raw markdown text and returns a list of tuples for links
+# function that takes raw markdown text and returns a list of tuples for links
 def extract_markdown_links(text):
-    matches = re.findall(r"(?<!\!)\[([^\[\]]*)\]\(([^\(\)]*)\)",text)
+    matches = re.findall(r"(?<!\!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return matches
+
 
 def split_nodes_image(old_nodes):
     new_nodes = []
@@ -55,7 +59,7 @@ def split_nodes_image(old_nodes):
             sections = current_text.split(f"![{image_alt}]({image_link})", 1)
 
             if sections[0] != "":
-                new_nodes.append(TextNode(sections[0],TextType.TEXT))
+                new_nodes.append(TextNode(sections[0], TextType.TEXT))
 
             new_nodes.append(TextNode(image_alt, TextType.IMAGE, image_link))
 
@@ -65,6 +69,7 @@ def split_nodes_image(old_nodes):
             new_nodes.append(TextNode(current_text, TextType.TEXT))
 
     return new_nodes
+
 
 def split_nodes_link(old_nodes):
     new_nodes = []
@@ -85,16 +90,17 @@ def split_nodes_link(old_nodes):
             sections = current_text.split(f"[{link_alt}]({link})", 1)
 
             if sections[0] != "":
-                new_nodes.append(TextNode(sections[0],TextType.TEXT))
+                new_nodes.append(TextNode(sections[0], TextType.TEXT))
 
             new_nodes.append(TextNode(link_alt, TextType.LINKS, link))
 
             current_text = sections[1]
 
         if current_text != "":
-            new_nodes.append(TextNode(current_text. TextType.TEXT))
+            new_nodes.append(TextNode(current_text, TextType.TEXT))
 
     return new_nodes
+
 
 def text_to_textnodes(text):
     text_node = [TextNode(text, TextType.TEXT)]

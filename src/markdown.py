@@ -67,7 +67,7 @@ def markdown_to_html_node(markdown):
             block_nodes.append(node)
 
         elif type == BlockType.CODE:
-            text = block[4:-3]
+            text = block.strip("`").strip()
             raw = TextNode(text, TextType.TEXT)
             child = text_node_to_html_node(raw)
 
